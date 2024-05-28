@@ -10,9 +10,11 @@ module "vpc" {
 module "subnet" {
   source = "./modules/aws_subnet"
   
-  vpc_id       = module.vpc.vpc_id
-  subnets      = var.subnets
-  project_name = var.project_name
+  vpc_id          = module.vpc.vpc_id
+  subnets         = var.subnets
+  project_name    = var.project_name
+  public_subnets  = var.public_subnet_ids
+  private_subnets = var.private_subnet_ids
 }
 
 module "internet_gateway" {
@@ -49,8 +51,9 @@ module "nat_gateway" {
 module "security_groups" {
   source = "./modules/aws_security_groups"
 
-  description = "Access for zing systems and users"
-  vpc_id      = module.vpc.vpc_id
+  description  = "Access for zing systems and users"
+  vpc_id       = module.vpc.vpc_id
+  project_name = var.project_name
 
   egress_rules = [
     {
@@ -148,14 +151,17 @@ module "security_groups" {
   ]
 
   name = "zing-Access"
-  tags = {}
+  tags = {
+    Name        = "${var.project_name}-sg"
+  }
 }
 
 module "network_acl" {
   source = "./modules/aws_network_acl"
 
-  vpc_id        = module.vpc.vpc_id
-  subnet_ids    = var.subnet_ids
+  vpc_id       = module.vpc.vpc_id
+  subnet_ids   = var.subnet_ids
+  project_name = var.project_name
 
   ingress_rules = [
     {
@@ -244,6 +250,6 @@ module "network_acl" {
   ]
 
   tags = {
-    Name = "Custom Network ACL"
+    Name        = "${var.project_name}-nacl"
   }
 }

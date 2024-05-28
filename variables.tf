@@ -1,6 +1,8 @@
 # environment variables
 variable "region" {
-  default = "us-west-2"
+  description = "Region where the resources will get deployed"
+  type        = string
+  default     = "us-west-2"
 }
 
 variable "project_name" {
@@ -134,14 +136,12 @@ variable "public_subnet_id" {
   default     = "subnet-01968f16b673877b9"
 }
 
-# VPC Public Subnets
 variable "public_subnet_ids" {
   description = "A list of public subnets inside the VPC"
   type = list(string)
   default = ["subnet-01968f16b673877b9", "subnet-0d551d3e5ee6b0a22", "subnet-031f62fe8c628b603", "subnet-02c332c3f7d7efefa", "subnet-06e37d1f09fac92af", "subnet-04f949d7c7c91ea8e", "subnet-07b80e92955ea9cc4", "subnet-00817c06df8dc4734"]
 }
 
-# VPC Private Subnets
 variable "private_subnet_ids" {
   description = "A list of private subnets inside the VPC"
   type = list(string)
@@ -160,95 +160,8 @@ variable "private_route_table" {
   default     = "rtb-073577ea5d0c05731"
 }
 
-# variable "description" {
-#   description = "Description for the security group"
-#   type        = string
-# }
-
-# variable "egress_rules" {
-#   description = "List of egress rules for the security group"
-#   type        = list(object({
-#     cidr_blocks      = [
-#       "0.0.0.0/0",
-#     ]
-#     description      = string
-#     from_port        = 0
-#     ipv6_cidr_blocks = []
-#     prefix_list_ids  = []
-#     protocol         = "-1"
-#     security_groups  = []
-#     self             = false
-#     to_port          = 0
-#   }))
-# }
-
-# variable "ingress_rules" {
-#   description = "List of ingress rules for the security group"
-#   type = list(object({
-#     cidr_blocks      = [
-#       "10.0.0.0/22",
-#     ]
-#       description      = "TCP traffic on port 3306"
-#       from_port        = 3306
-#       ipv6_cidr_blocks = []
-#       prefix_list_ids  = []
-#       protocol         = "tcp"
-#       security_groups  = []
-#       self             = false
-#       to_port          = 3306
-#     },
-#     {
-#       cidr_blocks      = [
-#         "10.0.0.0/22",
-#       ]
-#       description      = "TCP traffic on port 443"
-#       from_port        = 443
-#       ipv6_cidr_blocks = []
-#       prefix_list_ids  = []
-#       protocol         = "tcp"
-#       security_groups  = []
-#       self             = false
-#       to_port          = 443
-#   }))
-# }
-
-# variable "name" {
-#   description = "Name of the security group"
-#   type        = string
-# }
-
 variable "subnet_ids" {
   description = "List of subnet IDs associated with the network ACL"
   type        = list(string)
   default     = ["subnet-031f62fe8c628b603", "subnet-02c332c3f7d7efefa"]
 }
-
-# variable "ingress_rules" {
-#   description = "List of ingress rules for the network ACL"
-#   type        = list(object({
-#     protocol   = string
-#     rule_no    = number
-#     action     = string
-#     cidr_block = string
-#     from_port  = number
-#     to_port    = number
-#   }))
-# }
-
-# variable "egress_rules" {
-#   description = "List of egress rules for the network ACL"
-#   type        = list(object({
-#     protocol   = string
-#     rule_no    = number
-#     action     = string
-#     cidr_block = string
-#     from_port  = number
-#     to_port    = number
-#   }))
-# }
-
-# variable "tags" {
-#   description = "Tags to assign to the network ACL"
-#   type        = map(string)
-#   default     = {}
-# }
