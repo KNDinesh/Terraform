@@ -20,24 +20,39 @@ output "internet_gateway_id" {
   value       = module.internet_gateway
 }
 
-# outputs of aws_ngw module
-output "nat_gateway_id" {
-  description = "The ID of the created NAT Gateway"
-  value       = module.nat_gateway
+output "public_subnet_ids" {
+  description = "List of public subnet IDs"
+  value = [for name, subnet in var.subnets : subnet.public ? aws_subnet.subnets[name].id : null]
 }
 
-output "public_subnet_id" {
-  description = "The ID of the public subnet where the NAT Gateway is deployed"
-  value       = var.public_subnet_id
+output "private_subnet_ids" {
+  description = "List of private subnet IDs"
+  value = [for name, subnet in var.subnets : !subnet.public ? aws_subnet.subnets[name].id : null]
+}
+
+output "nat_gateway_id" {
+  value       = module.nat_gateway.nat_gateway_id
+  description = "The ID of the created NAT Gateway"
+}
+
+output "nat_gateway_eip" {
+  value       = module.nat_gateway.nat_gateway_eip
+  description = "The Elastic IP associated with the NAT Gateway"
 }
 
 # outputs of aws_route_table module
-output "public_route_table_id" {
-  description = "The ID of the public route table"
-  value       = var.public_route_table
+output "route_table_id" {
+  description = "The ID of the created route table"
+  value       = module.route_table.route_table_id
 }
 
-output "private_route_table_id" {
-  description = "The ID of the private route table"
-  value       = var.private_route_table
+# Output security group ID
+output "security_group_id" {
+  value       = module.security_groups.security_group_id
+  description = "The ID of the security group"
+}
+
+output "subnet_ids" {
+  description = "List of subnet IDs"
+  value       = module.subnets.subnet_ids
 }

@@ -1,20 +1,18 @@
 module "vpc" {
   source = "./modules/aws_vpc"
   
-  vpc_id          = var.vpc_id
+  vpc_id          = module.vpc.vpc_id
   region          = var.region
-  project_name    = var.project_name
   vpc_cidr        = var.vpc_cidr
+  project_name    = var.project_name
 }
 
-module "subnet" {
+module "subnets" {
   source = "./modules/aws_subnet"
   
   vpc_id          = module.vpc.vpc_id
   subnets         = var.subnets
   project_name    = var.project_name
-  public_subnets  = var.public_subnet_ids
-  private_subnets = var.private_subnet_ids
 }
 
 module "internet_gateway" {
@@ -25,26 +23,25 @@ module "internet_gateway" {
 }
 
 module "route_table" {
-  source      = "./modules/aws_route_table"
-  
-  vpc_id       = module.vpc.vpc_id
-  project_name = var.project_name
-  nat_gateway  = module.nat_gateway.nat_gateway_id
+  source = "./modules/aws_route_table"
+
+  vpc_id              = module.vpc.vpc_id
+  nat_gateway_id      = module.nat_gateway.nat_gateway_id
+  type                = module.nat_gateway.nat_gateway_id != "" ? "public" : "private"
+  internet_gateway_id = module.internet_gateway.internet_gateway_id
+  project_name        = var.project_name
 }
 
 module "route_table_association" {
   source = "./modules/aws_route_table_association"
 
-  public_subnet_ids   = var.public_subnet_ids
-  private_subnet_ids  = var.private_subnet_ids
-  public_route_table  = var.public_route_table
-  private_route_table = var.private_route_table
+  subnets = module.subnets.subnet_ids
 }
 
 module "nat_gateway" {
   source = "./modules/aws_ngw"
 
-  public_subnet_id = var.public_subnet_id
+  public_subnet_id = module.subnets.subnet_ids
   project_name     = var.project_name
 }
 
@@ -160,7 +157,7 @@ module "network_acl" {
   source = "./modules/aws_network_acl"
 
   vpc_id       = module.vpc.vpc_id
-  subnet_ids   = var.subnet_ids
+  subnet_ids   = module.subnets.subnet_ids
   project_name = var.project_name
 
   ingress_rules = [
