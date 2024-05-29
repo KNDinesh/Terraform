@@ -20,15 +20,15 @@ output "internet_gateway_id" {
   value       = module.internet_gateway
 }
 
-output "public_subnet_ids" {
-  description = "List of public subnet IDs"
-  value = [for name, subnet in var.subnets : subnet.public ? aws_subnet.subnets[name].id : null]
-}
+# output "public_subnet_ids" {
+#   description = "List of public subnet IDs"
+#   value = [for name, subnet in var.subnets : subnet.public ? aws_subnet.subnets[name].id : null]
+# }
 
-output "private_subnet_ids" {
-  description = "List of private subnet IDs"
-  value = [for name, subnet in var.subnets : !subnet.public ? aws_subnet.subnets[name].id : null]
-}
+# output "private_subnet_ids" {
+#   description = "List of private subnet IDs"
+#   value = [for name, subnet in var.subnets : !subnet.public ? aws_subnet.subnets[name].id : null]
+# }
 
 output "nat_gateway_id" {
   value       = module.nat_gateway.nat_gateway_id
@@ -52,7 +52,7 @@ output "security_group_id" {
   description = "The ID of the security group"
 }
 
-output "subnet_ids" {
-  description = "List of subnet IDs"
-  value       = module.subnets.subnet_ids
-}
+# output "subnet_id" {
+#   description = "List of subnet IDs"
+#   value       = module.subnets.subnet_id
+# }

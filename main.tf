@@ -35,14 +35,15 @@ module "route_table" {
 module "route_table_association" {
   source = "./modules/aws_route_table_association"
 
-  subnets = module.subnets.subnet_ids
+  subnets        = var.subnets
+  route_table_id = module.route_table.route_table_id
 }
 
 module "nat_gateway" {
   source = "./modules/aws_ngw"
 
-  public_subnet_id = module.subnets.subnet_ids
-  project_name     = var.project_name
+  subnet_id    = module.subnets.subnet_id
+  project_name = var.project_name
 }
 
 module "security_groups" {
@@ -159,6 +160,7 @@ module "network_acl" {
   vpc_id       = module.vpc.vpc_id
   subnet_ids   = module.subnets.subnet_ids
   project_name = var.project_name
+  subnets      = var.subnets
 
   ingress_rules = [
     {
